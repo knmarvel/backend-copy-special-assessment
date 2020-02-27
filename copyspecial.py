@@ -16,29 +16,51 @@ import subprocess
 import argparse
 
 # This is to help coaches and graders identify student assignments
-__author__ = "???"
+__author__ = "knmarvel"
 
 
-# +++your code here+++
-# Write functions and modify main() to call them
+def get_special_paths(dir):
+    # takes a directory and returns a list of the absolute
+    # paths of the special files in the given directory
+    spec_paths = []
+    for root, dirs, files in os.walk(dir):
+        for name in files:
+            if re.search("__(.+?)__", name):
+                spec_paths.append((os.path.join(os.path.abspath(dir), name)))
+    return spec_paths
 
-def main():
-    # This snippet will help you get started with the argparse module.
+
+def copy_to(paths, dir):
+    #   given a list of the paths, copy those files into the
+    #   given directory
+    for file in paths:
+        shutil.copy(file, dir)
+
+
+def zip_to(paths, dir):
+    # given a list of paths, zip those files up into the given zipfile
+    subprocess.call(["zip", "-j", dir, *paths])
+
+
+def parsing():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--fromdir', default='./')
     parser.add_argument('--todir', help='dest dir for special files')
     parser.add_argument('--tozip', help='dest zipfile for special files')
-    # TODO need an argument to pick up 'from_dir'
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    # TODO you must write your own code to get the cmdline args.
-    # Read the docs and examples for the argparse module about how to do this.
 
-    # Parsing command line arguments is a must-have skill.
-    # This is input data validation.  If something is wrong (or missing) with any
-    # required args, the general rule is to print a usage message and exit(1).
+def main():
+    args = parsing()
 
-    # +++your code here+++
-    # Call your functions
+    spec_paths = get_special_paths(args.fromdir)
+    print("\n".join(spec_paths))
+
+    if args.todir:
+        copy_to(spec_paths, args.todir)
+
+    if args.tozip:
+        zip_to(spec_paths, args.tozip)
 
 
 if __name__ == "__main__":
