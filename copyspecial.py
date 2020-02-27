@@ -16,7 +16,7 @@ import subprocess
 import argparse
 
 # This is to help coaches and graders identify student assignments
-__author__ = "knmarvel"
+__author__ = "knmarvel with madarp"
 
 
 def get_special_paths(dir):
