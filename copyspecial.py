@@ -20,29 +20,33 @@ __author__ = "knmarvel"
 
 
 def get_special_paths(dir):
-    # takes a directory and returns a list of the absolute
-    # paths of the special files in the given directory
+    """takes a directory and returns a list of the absolute
+    paths of the special files in the given directory"""
     spec_paths = []
     for root, dirs, files in os.walk(dir):
         for name in files:
             if re.search("__(.+?)__", name):
-                spec_paths.append((os.path.join(os.path.abspath(dir), name)))
+                if os.path.join(os.path.abspath(dir), name) not in spec_paths:
+                    spec_paths.append(os.path.join(os.path.abspath(dir), name))
+                else:
+                    return "ERROR"
     return spec_paths
 
 
 def copy_to(paths, dir):
-    #   given a list of the paths, copy those files into the
-    #   given directory
+    """given a list of the paths, copy those files into the
+    given directory"""
     for file in paths:
         shutil.copy(file, dir)
 
 
 def zip_to(paths, dir):
-    # given a list of paths, zip those files up into the given zipfile
+    """given a list of paths, zip those files up into the given zipfile"""
     subprocess.call(["zip", "-j", dir, *paths])
 
 
 def parsing():
+    """parses arguments given as parameters in calling function"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--fromdir', default='./')
     parser.add_argument('--todir', help='dest dir for special files')
@@ -51,9 +55,12 @@ def parsing():
 
 
 def main():
+    """Calls all functions to return above listed results"""
     args = parsing()
-
     spec_paths = get_special_paths(args.fromdir)
+    if spec_paths == "ERROR":
+        print("Error: duplicate special files.")
+        return "Error: duplicate special files."
     print("\n".join(spec_paths))
 
     if args.todir:
