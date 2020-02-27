@@ -41,8 +41,10 @@ def copy_to(paths, dir):
 
 
 def zip_to(paths, dir):
-    """given a list of paths, zip those files up into the given zipfile"""
-    subprocess.call(["zip", "-j", dir, *paths])
+    """given a list of paths, zip those files up into the
+    given zipfile"""
+    cmd = ["zip", "-j", dir] + paths
+    subprocess.call(cmd)
 
 
 def parsing():
