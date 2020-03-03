@@ -22,7 +22,7 @@ __author__ = "knmarvel with madarp"
 def get_special_paths(dir):
     """takes a directory and returns a list of the absolute
     paths of the special files in the given directory"""
-    
+
     spec_paths = []
     for root, dirs, files in os.walk(dir):
         for name in files:
@@ -56,7 +56,7 @@ def parsing():
     """parses arguments given as parameters in calling function"""
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('fromdir', default='./')
+    parser.add_argument('-fromdir', default='./')
     parser.add_argument('--todir', help='dest dir for special files')
     parser.add_argument('--tozip', help='dest zipfile for special files')
     return parser.parse_args()
